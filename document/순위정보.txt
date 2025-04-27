@@ -1,0 +1,2163 @@
+호가잔량상위요청
+ka10020
+
+import requests
+import json
+
+# 호가잔량상위요청
+def fn_ka10020(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10020', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '001', # 시장구분 001:코스피, 101:코스닥
+		'sort_tp': '1', # 정렬구분 1:순매수잔량순, 2:순매도잔량순, 3:매수비율순, 4:매도비율순
+		'trde_qty_tp': '0000', # 거래량구분 0000:장시작전(0주이상), 0010:만주이상, 0050:5만주이상, 00100:10만주이상
+		'stk_cnd': '0', # 종목조건 0:전체조회, 1:관리종목제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기
+		'crd_cnd': '0', # 신용조건 0:전체조회, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 9:신용융자전체
+		'stex_tp': '1', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10020(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10020(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	001:코스피, 101:코스닥
+sort_tp	정렬구분	String	Y	1	1:순매수잔량순, 2:순매도잔량순, 3:매수비율순, 4:매도비율순
+trde_qty_tp	거래량구분	String	Y	4	0000:장시작전(0주이상), 0010:만주이상, 0050:5만주이상, 00100:10만주이상
+stk_cnd	종목조건	String	Y	1	0:전체조회, 1:관리종목제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기
+crd_cnd	신용조건	String	Y	1	0:전체조회, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 9:신용융자전체
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT 3.통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+bid_req_upper	호가잔량상위	LIST	N		
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- trde_qty	거래량	String	N	20	
+- tot_sel_req	총매도잔량	String	N	20	
+- tot_buy_req	총매수잔량	String	N	20	
+- netprps_req	순매수잔량	String	N	20	
+- buy_rt	매수비율	String	N	20	
+
+
+호가잔량급증요청
+ka10021
+
+import requests
+import json
+
+# 호가잔량급증요청
+def fn_ka10021(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10021', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '001', # 시장구분 001:코스피, 101:코스닥
+		'trde_tp': '1', # 매매구분 1:매수잔량, 2:매도잔량
+		'sort_tp': '1', # 정렬구분 1:급증량, 2:급증률
+		'tm_tp': '30', # 시간구분 분 입력
+		'trde_qty_tp': '1', # 거래량구분 1:천주이상, 5:5천주이상, 10:만주이상, 50:5만주이상, 100:10만주이상
+		'stk_cnd': '0', # 종목조건 0:전체조회, 1:관리종목제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기
+		'stex_tp': '3', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10021(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10021(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	001:코스피, 101:코스닥
+trde_tp	매매구분	String	Y	1	1:매수잔량, 2:매도잔량
+sort_tp	정렬구분	String	Y	1	1:급증량, 2:급증률
+tm_tp	시간구분	String	Y	2	분 입력
+trde_qty_tp	거래량구분	String	Y	4	1:천주이상, 5:5천주이상, 10:만주이상, 50:5만주이상, 100:10만주이상
+stk_cnd	종목조건	String	Y	1	0:전체조회, 1:관리종목제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT 3.통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+bid_req_sdnin	호가잔량급증	LIST	N		
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- int	기준률	String	N	20	
+- now	현재	String	N	20	
+- sdnin_qty	급증수량	String	N	20	
+- sdnin_rt	급증률	String	N	20	
+- tot_buy_qty	총매수량	String	N	20	
+
+
+잔량율급증요청
+ka10022
+
+import requests
+import json
+
+# 잔량율급증요청
+def fn_ka10022(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10022', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '001', # 시장구분 001:코스피, 101:코스닥
+		'rt_tp': '1', # 비율구분 1:매수/매도비율, 2:매도/매수비율
+		'tm_tp': '1', # 시간구분 분 입력
+		'trde_qty_tp': '5', # 거래량구분 5:5천주이상, 10:만주이상, 50:5만주이상, 100:10만주이상
+		'stk_cnd': '0', # 종목조건 0:전체조회, 1:관리종목제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기
+		'stex_tp': '3', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10022(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10022(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	001:코스피, 101:코스닥
+rt_tp	비율구분	String	Y	1	1:매수/매도비율, 2:매도/매수비율
+tm_tp	시간구분	String	Y	2	분 입력
+trde_qty_tp	거래량구분	String	Y	1	5:5천주이상, 10:만주이상, 50:5만주이상, 100:10만주이상
+stk_cnd	종목조건	String	Y	1	0:전체조회, 1:관리종목제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT 3.통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+req_rt_sdnin	잔량율급증	LIST	N		
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- int	기준률	String	N	20	
+- now_rt	현재비율	String	N	20	
+- sdnin_rt	급증률	String	N	20	
+- tot_sel_req	총매도잔량	String	N	20	
+- tot_buy_req	총매수잔량	String	N	20	
+
+
+거래량급증요청
+ka10023
+
+import requests
+import json
+
+# 거래량급증요청
+def fn_ka10023(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10023', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '000', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'sort_tp': '1', # 정렬구분 1:급증량, 2:급증률
+		'tm_tp': '2', # 시간구분 1:분, 2:전일
+		'trde_qty_tp': '5', # 거래량구분 5:5천주이상, 10:만주이상, 50:5만주이상, 100:10만주이상, 200:20만주이상, 300:30만주이상, 500:50만주이상, 1000:백만주이상
+		'tm': '', # 시간 분 입력
+		'stk_cnd': '0', # 종목조건 0:전체조회, 1:관리종목제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기
+		'pric_tp': '0', # 가격구분 0:전체조회, 2:5만원이상, 5:1만원이상, 6:5천원이상, 8:1천원이상, 9:10만원이상
+		'stex_tp': '3', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10023(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10023(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	000:전체, 001:코스피, 101:코스닥
+sort_tp	정렬구분	String	Y	1	1:급증량, 2:급증률
+tm_tp	시간구분	String	Y	1	1:분, 2:전일
+trde_qty_tp	거래량구분	String	Y	1	5:5천주이상, 10:만주이상, 50:5만주이상, 100:10만주이상, 200:20만주이상, 300:30만주이상, 500:50만주이상, 1000:백만주이상
+tm	시간	String	N	2	분 입력
+stk_cnd	종목조건	String	Y	1	0:전체조회, 1:관리종목제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기
+pric_tp	가격구분	String	Y	1	0:전체조회, 2:5만원이상, 5:1만원이상, 6:5천원이상, 8:1천원이상, 9:10만원이상
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT 3.통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+trde_qty_sdnin	거래량급증	LIST	N		
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- flu_rt	등락률	String	N	20	
+- prev_trde_qty	이전거래량	String	N	20	
+- now_trde_qty	현재거래량	String	N	20	
+- sdnin_qty	급증량	String	N	20	
+- sdnin_rt	급증률	String	N	20	
+
+
+전일대비등락률상위요청
+ka10027
+
+import requests
+import json
+
+# 전일대비등락률상위요청
+def fn_ka10027(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10027', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '000', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'sort_tp': '1', # 정렬구분 1:상승률, 2:상승폭, 3:하락률, 4:하락폭
+		'trde_qty_cnd': '0000', # 거래량조건 0000:전체조회, 0010:만주이상, 0050:5만주이상, 0100:10만주이상, 0150:15만주이상, 0200:20만주이상, 0300:30만주이상, 0500:50만주이상, 1000:백만주이상
+		'stk_cnd': '0', # 종목조건 0:전체조회, 1:관리종목제외, 4:우선주+관리주제외, 3:우선주제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기, 11:정리매매종목제외
+		'crd_cnd': '0', # 신용조건 0:전체조회, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 9:신용융자전체
+		'updown_incls': '1', # 상하한포함 0:불 포함, 1:포함
+		'pric_cnd': '0', # 가격조건 0:전체조회, 1:1천원미만, 2:1천원~2천원, 3:2천원~5천원, 4:5천원~1만원, 5:1만원이상, 8:1천원이상
+		'trde_prica_cnd': '0', # 거래대금조건 0:전체조회, 3:3천만원이상, 5:5천만원이상, 10:1억원이상, 30:3억원이상, 50:5억원이상, 100:10억원이상, 300:30억원이상, 500:50억원이상, 1000:100억원이상, 3000:300억원이상, 5000:500억원이상
+		'stex_tp': '3', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10027(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10027(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	000:전체, 001:코스피, 101:코스닥
+sort_tp	정렬구분	String	Y	1	1:상승률, 2:상승폭, 3:하락률, 4:하락폭
+trde_qty_cnd	거래량조건	String	Y	5	0000:전체조회, 0010:만주이상, 0050:5만주이상, 0100:10만주이상, 0150:15만주이상, 0200:20만주이상, 0300:30만주이상, 0500:50만주이상, 1000:백만주이상
+stk_cnd	종목조건	String	Y	2	0:전체조회, 1:관리종목제외, 4:우선주+관리주제외, 3:우선주제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기, 11:정리매매종목제외
+crd_cnd	신용조건	String	Y	1	0:전체조회, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 9:신용융자전체
+updown_incls	상하한포함	String	Y	2	0:불 포함, 1:포함
+pric_cnd	가격조건	String	Y	2	0:전체조회, 1:1천원미만, 2:1천원~2천원, 3:2천원~5천원, 4:5천원~1만원, 5:1만원이상, 8:1천원이상
+trde_prica_cnd	거래대금조건	String	Y	4	0:전체조회, 3:3천만원이상, 5:5천만원이상, 10:1억원이상, 30:3억원이상, 50:5억원이상, 100:10억원이상, 300:30억원이상, 500:50억원이상, 1000:100억원이상, 3000:300억원이상, 5000:500억원이상
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT 3.통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+pred_pre_flu_rt_upper	전일대비등락률상위	LIST	N		
+- stk_cls	종목분류	String	N	20	
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- flu_rt	등락률	String	N	20	
+- sel_req	매도잔량	String	N	20	
+- buy_req	매수잔량	String	N	20	
+- now_trde_qty	현재거래량	String	N	20	
+- cntr_str	체결강도	String	N	20	
+- cnt	횟수	String	N	20	
+
+
+예상체결등락률상위요청
+ka10029
+
+import requests
+import json
+
+# 예상체결등락률상위요청
+def fn_ka10029(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10029', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '000', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'sort_tp': '1', # 정렬구분 1:상승률, 2:상승폭, 3:보합, 4:하락률,5:하락폭, 6, 체결량, 7:상한, 8:하한
+		'trde_qty_cnd': '0', # 거래량조건 0:전체조회, 1;천주이상, 3:3천주, 5:5천주, 10:만주이상, 50:5만주이상, 100:10만주이상
+		'stk_cnd': '0', # 종목조건 0:전체조회, 1:관리종목제외, 3:우선주제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기, 11:정리매매종목제외
+		'crd_cnd': '0', # 신용조건 0:전체조회, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 9:신용융자전체
+		'pric_cnd': '0', # 가격조건 0:전체조회, 1:1천원미만, 2:1천원~2천원, 3:2천원~5천원, 4:5천원~1만원, 5:1만원이상, 8:1천원이상
+		'stex_tp': '3', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10029(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10029(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	000:전체, 001:코스피, 101:코스닥
+sort_tp	정렬구분	String	Y	1	1:상승률, 2:상승폭, 3:보합, 4:하락률,5:하락폭, 6, 체결량, 7:상한, 8:하한
+trde_qty_cnd	거래량조건	String	Y	5	0:전체조회, 1;천주이상, 3:3천주, 5:5천주, 10:만주이상, 50:5만주이상, 100:10만주이상
+stk_cnd	종목조건	String	Y	2	0:전체조회, 1:관리종목제외, 3:우선주제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기, 11:정리매매종목제외
+crd_cnd	신용조건	String	Y	1	0:전체조회, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 9:신용융자전체
+pric_cnd	가격조건	String	Y	2	0:전체조회, 1:1천원미만, 2:1천원~2천원, 3:2천원~5천원, 4:5천원~1만원, 5:1만원이상, 8:1천원이상
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT 3.통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+exp_cntr_flu_rt_upper	예상체결등락률상위	LIST	N		
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- exp_cntr_pric	예상체결가	String	N	20	
+- base_pric	기준가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- flu_rt	등락률	String	N	20	
+- exp_cntr_qty	예상체결량	String	N	20	
+- sel_req	매도잔량	String	N	20	
+- sel_bid	매도호가	String	N	20	
+- buy_bid	매수호가	String	N	20	
+- buy_req	매수잔량	String	N	20	
+
+
+당일거래량상위요청
+ka10030
+
+import requests
+import json
+
+# 당일거래량상위요청
+def fn_ka10030(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10030', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '000', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'sort_tp': '1', # 정렬구분 1:거래량, 2:거래회전율, 3:거래대금
+		'mang_stk_incls': '0', # 관리종목포함 0:관리종목 포함, 1:관리종목 미포함, 3:우선주제외, 11:정리매매종목제외, 4:관리종목, 우선주제외, 5:증100제외, 6:증100마나보기, 13:증60만보기, 12:증50만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기, 14:ETF제외, 15:스팩제외, 16:ETF+ETN제외
+		'crd_tp': '0', # 신용구분 0:전체조회, 9:신용융자전체, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 8:신용대주
+		'trde_qty_tp': '0', # 거래량구분 0:전체조회, 5:5천주이상, 10:1만주이상, 50:5만주이상, 100:10만주이상, 200:20만주이상, 300:30만주이상, 500:500만주이상, 1000:백만주이상
+		'pric_tp': '0', # 가격구분 0:전체조회, 1:1천원미만, 2:1천원이상, 3:1천원~2천원, 4:2천원~5천원, 5:5천원이상, 6:5천원~1만원, 10:1만원미만, 7:1만원이상, 8:5만원이상, 9:10만원이상
+		'trde_prica_tp': '0', # 거래대금구분 0:전체조회, 1:1천만원이상, 3:3천만원이상, 4:5천만원이상, 10:1억원이상, 30:3억원이상, 50:5억원이상, 100:10억원이상, 300:30억원이상, 500:50억원이상, 1000:100억원이상, 3000:300억원이상, 5000:500억원이상
+		'mrkt_open_tp': '0', # 장운영구분 0:전체조회, 1:장중, 2:장전시간외, 3:장후시간외
+		'stex_tp': '3', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10030(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10030(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	000:전체, 001:코스피, 101:코스닥
+sort_tp	정렬구분	String	Y	1	1:거래량, 2:거래회전율, 3:거래대금
+mang_stk_incls	관리종목포함	String	Y	1	0:관리종목 포함, 1:관리종목 미포함, 3:우선주제외, 11:정리매매종목제외, 4:관리종목, 우선주제외, 5:증100제외, 6:증100마나보기, 13:증60만보기, 12:증50만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기, 14:ETF제외, 15:스팩제외, 16:ETF+ETN제외
+crd_tp	신용구분	String	Y	1	0:전체조회, 9:신용융자전체, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 8:신용대주
+trde_qty_tp	거래량구분	String	Y	1	0:전체조회, 5:5천주이상, 10:1만주이상, 50:5만주이상, 100:10만주이상, 200:20만주이상, 300:30만주이상, 500:500만주이상, 1000:백만주이상
+pric_tp	가격구분	String	Y	1	0:전체조회, 1:1천원미만, 2:1천원이상, 3:1천원~2천원, 4:2천원~5천원, 5:5천원이상, 6:5천원~1만원, 10:1만원미만, 7:1만원이상, 8:5만원이상, 9:10만원이상
+trde_prica_tp	거래대금구분	String	Y	1	0:전체조회, 1:1천만원이상, 3:3천만원이상, 4:5천만원이상, 10:1억원이상, 30:3억원이상, 50:5억원이상, 100:10억원이상, 300:30억원이상, 500:50억원이상, 1000:100억원이상, 3000:300억원이상, 5000:500억원이상
+mrkt_open_tp	장운영구분	String	Y	1	0:전체조회, 1:장중, 2:장전시간외, 3:장후시간외
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT 3.통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+tdy_trde_qty_upper	당일거래량상위	LIST	N		
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- flu_rt	등락률	String	N	20	
+- trde_qty	거래량	String	N	20	
+- pred_rt	전일비	String	N	20	
+- trde_tern_rt	거래회전율	String	N	20	
+- trde_amt	거래금액	String	N	20	
+- opmr_trde_qty	장중거래량	String	N	20	
+- opmr_pred_rt	장중전일비	String	N	20	
+- opmr_trde_rt	장중거래회전율	String	N	20	
+- opmr_trde_amt	장중거래금액	String	N	20	
+- af_mkrt_trde_qty	장후거래량	String	N	20	
+- af_mkrt_pred_rt	장후전일비	String	N	20	
+- af_mkrt_trde_rt	장후거래회전율	String	N	20	
+- af_mkrt_trde_amt	장후거래금액	String	N	20	
+- bf_mkrt_trde_qty	장전거래량	String	N	20	
+- bf_mkrt_pred_rt	장전전일비	String	N	20	
+- bf_mkrt_trde_rt	장전거래회전율	String	N	20	
+- bf_mkrt_trde_amt	장전거래금액	String	N	20	
+
+
+전일거래량상위요청
+ka10031
+
+import requests
+import json
+
+# 전일거래량상위요청
+def fn_ka10031(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10031', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '101', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'qry_tp': '1', # 조회구분 1:전일거래량 상위100종목, 2:전일거래대금 상위100종목
+		'rank_strt': '0', # 순위시작 0 ~ 100 값 중에  조회를 원하는 순위 시작값
+		'rank_end': '10', # 순위끝 0 ~ 100 값 중에  조회를 원하는 순위 끝값
+		'stex_tp': '3', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10031(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10031(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	000:전체, 001:코스피, 101:코스닥
+qry_tp	조회구분	String	Y	1	1:전일거래량 상위100종목, 2:전일거래대금 상위100종목
+rank_strt	순위시작	String	Y	3	0 ~ 100 값 중에 조회를 원하는 순위 시작값
+rank_end	순위끝	String	Y	3	0 ~ 100 값 중에 조회를 원하는 순위 끝값
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT 3.통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+pred_trde_qty_upper	전일거래량상위	LIST	N		
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- trde_qty	거래량	String	N	20	
+
+
+거래대금상위요청
+ka10032
+
+import requests
+import json
+
+# 거래대금상위요청
+def fn_ka10032(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10032', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '001', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'mang_stk_incls': '1', # 관리종목포함 0:관리종목 미포함, 1:관리종목 포함
+		'stex_tp': '3', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10032(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10032(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	000:전체, 001:코스피, 101:코스닥
+mang_stk_incls	관리종목포함	String	Y	1	0:관리종목 미포함, 1:관리종목 포함
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT 3.통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+trde_prica_upper	거래대금상위	LIST	N		
+- stk_cd	종목코드	String	N	20	
+- now_rank	현재순위	String	N	20	
+- pred_rank	전일순위	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- flu_rt	등락률	String	N	20	
+- sel_bid	매도호가	String	N	20	
+- buy_bid	매수호가	String	N	20	
+- now_trde_qty	현재거래량	String	N	20	
+- pred_trde_qty	전일거래량	String	N	20	
+- trde_prica	거래대금	String	N	20	
+
+
+신용비율상위요청
+ka10033
+
+import requests
+import json
+
+# 신용비율상위요청
+def fn_ka10033(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10033', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '000', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'trde_qty_tp': '0', # 거래량구분 0:전체조회, 10:만주이상, 50:5만주이상, 100:10만주이상, 200:20만주이상, 300:30만주이상, 500:50만주이상, 1000:백만주이상
+		'stk_cnd': '0', # 종목조건 0:전체조회, 1:관리종목제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기
+		'updown_incls': '1', # 상하한포함 0:상하한 미포함, 1:상하한포함
+		'crd_cnd': '0', # 신용조건 0:전체조회, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 9:신용융자전체
+		'stex_tp': '3', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10033(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10033(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	000:전체, 001:코스피, 101:코스닥
+trde_qty_tp	거래량구분	String	Y	3	0:전체조회, 10:만주이상, 50:5만주이상, 100:10만주이상, 200:20만주이상, 300:30만주이상, 500:50만주이상, 1000:백만주이상
+stk_cnd	종목조건	String	Y	1	0:전체조회, 1:관리종목제외, 5:증100제외, 6:증100만보기, 7:증40만보기, 8:증30만보기, 9:증20만보기
+updown_incls	상하한포함	String	Y	1	0:상하한 미포함, 1:상하한포함
+crd_cnd	신용조건	String	Y	1	0:전체조회, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 9:신용융자전체
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT 3.통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+crd_rt_upper	신용비율상위	LIST	N		
+- stk_infr	종목정보	String	N	20	
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- flu_rt	등락률	String	N	20	
+- crd_rt	신용비율	String	N	20	
+- sel_req	매도잔량	String	N	20	
+- buy_req	매수잔량	String	N	20	
+- now_trde_qty	현재거래량	String	N	20	
+
+
+외인기간별매매상위요청
+ka10034
+
+import requests
+import json
+
+# 외인기간별매매상위요청
+def fn_ka10034(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10034', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '001', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'trde_tp': '2', # 매매구분 1:순매도, 2:순매수, 3:순매매
+		'dt': '0', # 기간 0:당일, 1:전일, 5:5일, 10;10일, 20:20일, 60:60일
+		'stex_tp': '1', # 거래소구분 1:KRX, 2:NXT, 3:통합
+	}
+
+	# 3. API 실행
+	fn_ka10034(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10034(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	000:전체, 001:코스피, 101:코스닥
+trde_tp	매매구분	String	Y	1	1:순매도, 2:순매수, 3:순매매
+dt	기간	String	Y	2	0:당일, 1:전일, 5:5일, 10;10일, 20:20일, 60:60일
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT, 3:통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+for_dt_trde_upper	외인기간별매매상위	LIST	N		
+- rank	순위	String	N	20	
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- sel_bid	매도호가	String	N	20	
+- buy_bid	매수호가	String	N	20	
+- trde_qty	거래량	String	N	20	
+- netprps_qty	순매수량	String	N	20	
+- gain_pos_stkcnt	취득가능주식수	String	N	20	
+
+
+외인연속순매매상위요청
+ka10035
+
+import requests
+import json
+
+# 외인연속순매매상위요청
+def fn_ka10035(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10035', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '000', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'trde_tp': '2', # 매매구분 1:연속순매도, 2:연속순매수
+		'base_dt_tp': '1', # 기준일구분 0:당일기준, 1:전일기준
+		'stex_tp': '1', # 거래소구분 1:KRX, 2:NXT, 3:통합
+	}
+
+	# 3. API 실행
+	fn_ka10035(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10035(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	000:전체, 001:코스피, 101:코스닥
+trde_tp	매매구분	String	Y	1	1:연속순매도, 2:연속순매수
+base_dt_tp	기준일구분	String	Y	1	0:당일기준, 1:전일기준
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT, 3:통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+for_cont_nettrde_upper	외인연속순매매상위	LIST	N		
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- dm1	D-1	String	N	20	
+- dm2	D-2	String	N	20	
+- dm3	D-3	String	N	20	
+- tot	합계	String	N	20	
+- limit_exh_rt	한도소진율	String	N	20	
+- pred_pre_1	전일대비1	String	N	20	
+- pred_pre_2	전일대비2	String	N	20	
+- pred_pre_3	전일대비3	String	N	20	
+
+
+외인한도소진율증가상위
+ka10036
+
+import requests
+import json
+
+# 외인한도소진율증가상위
+def fn_ka10036(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10036', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '000', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'dt': '1', # 기간 0:당일, 1:전일, 5:5일, 10;10일, 20:20일, 60:60일
+		'stex_tp': '1', # 거래소구분 1:KRX, 2:NXT, 3:통합
+	}
+
+	# 3. API 실행
+	fn_ka10036(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10036(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	000:전체, 001:코스피, 101:코스닥
+dt	기간	String	Y	2	0:당일, 1:전일, 5:5일, 10;10일, 20:20일, 60:60일
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT, 3:통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+for_limit_exh_rt_incrs_upper	외인한도소진율증가상위	LIST	N		
+- rank	순위	String	N	20	
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- trde_qty	거래량	String	N	20	
+- poss_stkcnt	보유주식수	String	N	20	
+- gain_pos_stkcnt	취득가능주식수	String	N	20	
+- base_limit_exh_rt	기준한도소진율	String	N	20	
+- limit_exh_rt	한도소진율	String	N	20	
+- exh_rt_incrs	소진율증가	String	N	20	
+
+외국계창구매매상위요청
+ka10037
+
+import requests
+import json
+
+# 외국계창구매매상위요청
+def fn_ka10037(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10037', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '000', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'dt': '0', # 기간 0:당일, 1:전일, 5:5일, 10;10일, 20:20일, 60:60일
+		'trde_tp': '1', # 매매구분 1:순매수, 2:순매도, 3:매수, 4:매도
+		'sort_tp': '2', # 정렬구분 1:금액, 2:수량
+		'stex_tp': '1', # 거래소구분 1:KRX, 2:NXT, 3:통합
+	}
+
+	# 3. API 실행
+	fn_ka10037(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10037(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	000:전체, 001:코스피, 101:코스닥
+dt	기간	String	Y	2	0:당일, 1:전일, 5:5일, 10;10일, 20:20일, 60:60일
+trde_tp	매매구분	String	Y	1	1:순매수, 2:순매도, 3:매수, 4:매도
+sort_tp	정렬구분	String	Y	1	1:금액, 2:수량
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT, 3:통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+frgn_wicket_trde_upper	외국계창구매매상위	LIST	N		
+- rank	순위	String	N	20	
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- flu_rt	등락율	String	N	20	
+- sel_trde_qty	매도거래량	String	N	20	
+- buy_trde_qty	매수거래량	String	N	20	
+- netprps_trde_qty	순매수거래량	String	N	20	
+- netprps_prica	순매수대금	String	N	20	
+- trde_qty	거래량	String	N	20	
+- trde_prica	거래대금	String	N	20	
+
+
+종목별증권사순위요청
+ka10038
+
+import requests
+import json
+
+# 종목별증권사순위요청
+def fn_ka10038(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10038', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'stk_cd': '005930', # 종목코드 
+		'strt_dt': '20241106', # 시작일자 YYYYMMDD 
+		'end_dt': '20241107', # 종료일자 YYYYMMDD 
+		'qry_tp': '2', # 조회구분 1:순매도순위정렬, 2:순매수순위정렬
+		'dt': '1', # 기간 1:전일, 4:5일, 9:10일, 19:20일, 39:40일, 59:60일, 119:120일
+	}
+
+	# 3. API 실행
+	fn_ka10038(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10038(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+stk_cd	종목코드	String	Y	6	
+strt_dt	시작일자	String	Y	8	YYYYMMDD
+end_dt	종료일자	String	Y	8	YYYYMMDD
+qry_tp	조회구분	String	Y	1	1:순매도순위정렬, 2:순매수순위정렬
+dt	기간	String	Y	2	1:전일, 4:5일, 9:10일, 19:20일, 39:40일, 59:60일, 119:120일
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+rank_1	순위1	String	N	20	
+rank_2	순위2	String	N	20	
+rank_3	순위3	String	N	20	
+prid_trde_qty	기간중거래량	String	N	20	
+stk_sec_rank	종목별증권사순위	LIST	N		
+- rank	순위	String	N	20	
+- mmcm_nm	회원사명	String	N	20	
+- buy_qty	매수수량	String	N	20	
+- sell_qty	매도수량	String	N	20	
+- acc_netprps_qty	누적순매수수량	String	N	20	
+
+
+증권사별매매상위요청
+ka10039
+
+import requests
+import json
+
+# 증권사별매매상위요청
+def fn_ka10039(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10039', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mmcm_cd': '001', # 회원사코드 회원사 코드는 ka10102 조회
+		'trde_qty_tp': '0', # 거래량구분 0:전체, 5:5000주, 10:1만주, 50:5만주, 100:10만주, 500:50만주, 1000: 100만주
+		'trde_tp': '1', # 매매구분 1:순매수, 2:순매도
+		'dt': '1', # 기간 1:전일, 5:5일, 10:10일, 60:60일
+		'stex_tp': '3', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10039(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10039(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mmcm_cd	회원사코드	String	Y	3	회원사 코드는 ka10102 조회
+trde_qty_tp	거래량구분	String	Y	4	0:전체, 5:5000주, 10:1만주, 50:5만주, 100:10만주, 500:50만주, 1000: 100만주
+trde_tp	매매구분	String	Y	2	1:순매수, 2:순매도
+dt	기간	String	Y	2	1:전일, 5:5일, 10:10일, 60:60일
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT 3.통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+sec_trde_upper	증권사별매매상위	LIST	N		
+- rank	순위	String	N	20	
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- prid_stkpc_flu	기간중주가등락	String	N	20	
+- flu_rt	등락율	String	N	20	
+- prid_trde_qty	기간중거래량	String	N	20	
+- netprps	순매수	String	N	20	
+- buy_trde_qty	매수거래량	String	N	20	
+- sel_trde_qty	매도거래량	String	N	20	
+
+
+당일주요거래원요청
+ka10040
+
+import requests
+import json
+
+# 당일주요거래원요청
+def fn_ka10040(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10040', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'stk_cd': '005930', # 종목코드 
+	}
+
+	# 3. API 실행
+	fn_ka10040(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10040(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+stk_cd	종목코드	String	Y	6	
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+sel_trde_ori_irds_1	매도거래원별증감1	String	N		
+sel_trde_ori_qty_1	매도거래원수량1	String	N		
+sel_trde_ori_1	매도거래원1	String	N		
+sel_trde_ori_cd_1	매도거래원코드1	String	N		
+buy_trde_ori_1	매수거래원1	String	N		
+buy_trde_ori_cd_1	매수거래원코드1	String	N		
+buy_trde_ori_qty_1	매수거래원수량1	String	N		
+buy_trde_ori_irds_1	매수거래원별증감1	String	N		
+sel_trde_ori_irds_2	매도거래원별증감2	String	N		
+sel_trde_ori_qty_2	매도거래원수량2	String	N		
+sel_trde_ori_2	매도거래원2	String	N		
+sel_trde_ori_cd_2	매도거래원코드2	String	N		
+buy_trde_ori_2	매수거래원2	String	N		
+buy_trde_ori_cd_2	매수거래원코드2	String	N		
+buy_trde_ori_qty_2	매수거래원수량2	String	N		
+buy_trde_ori_irds_2	매수거래원별증감2	String	N		
+sel_trde_ori_irds_3	매도거래원별증감3	String	N		
+sel_trde_ori_qty_3	매도거래원수량3	String	N		
+sel_trde_ori_3	매도거래원3	String	N		
+sel_trde_ori_cd_3	매도거래원코드3	String	N		
+buy_trde_ori_3	매수거래원3	String	N		
+buy_trde_ori_cd_3	매수거래원코드3	String	N		
+buy_trde_ori_qty_3	매수거래원수량3	String	N		
+buy_trde_ori_irds_3	매수거래원별증감3	String	N		
+sel_trde_ori_irds_4	매도거래원별증감4	String	N		
+sel_trde_ori_qty_4	매도거래원수량4	String	N		
+sel_trde_ori_4	매도거래원4	String	N		
+sel_trde_ori_cd_4	매도거래원코드4	String	N		
+buy_trde_ori_4	매수거래원4	String	N		
+buy_trde_ori_cd_4	매수거래원코드4	String	N		
+buy_trde_ori_qty_4	매수거래원수량4	String	N		
+buy_trde_ori_irds_4	매수거래원별증감4	String	N		
+sel_trde_ori_irds_5	매도거래원별증감5	String	N		
+sel_trde_ori_qty_5	매도거래원수량5	String	N		
+sel_trde_ori_5	매도거래원5	String	N		
+sel_trde_ori_cd_5	매도거래원코드5	String	N		
+buy_trde_ori_5	매수거래원5	String	N		
+buy_trde_ori_cd_5	매수거래원코드5	String	N		
+buy_trde_ori_qty_5	매수거래원수량5	String	N		
+buy_trde_ori_irds_5	매수거래원별증감5	String	N		
+frgn_sel_prsm_sum_chang	외국계매도추정합변동	String	N		
+frgn_sel_prsm_sum	외국계매도추정합	String	N		
+frgn_buy_prsm_sum	외국계매수추정합	String	N		
+frgn_buy_prsm_sum_chang	외국계매수추정합변동	String	N		
+tdy_main_trde_ori	당일주요거래원	LIST	N		
+- sel_scesn_tm	매도이탈시간	String	N	20	
+- sell_qty	매도수량	String	N	20	
+- sel_upper_scesn_ori	매도상위이탈원	String	N	20	
+- buy_scesn_tm	매수이탈시간	String	N	20	
+- buy_qty	매수수량	String	N	20	
+- buy_upper_scesn_ori	매수상위이탈원	String	N	20	
+- qry_dt	조회일자	String	N	20	
+- qry_tm	조회시간	String	N	20	
+
+
+순매수거래원순위요청
+ka10042
+
+import requests
+import json
+
+# 순매수거래원순위요청
+def fn_ka10042(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10042', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'stk_cd': '005930', # 종목코드 거래소별 종목코드 (KRX:039490,NXT:039490_NX,SOR:039490_AL)
+		'strt_dt': '20241031', # 시작일자 YYYYMMDD
+		'end_dt': '20241107', # 종료일자 YYYYMMDD
+		'qry_dt_tp': '0', # 조회기간구분 0:기간으로 조회, 1:시작일자, 종료일자로 조회
+		'pot_tp': '0', # 시점구분 0:당일, 1:전일
+		'dt': '5', # 기간 5:5일, 10:10일, 20:20일, 40:40일, 60:60일, 120:120일
+		'sort_base': '1', # 정렬기준 1:종가순, 2:날짜순
+	}
+
+	# 3. API 실행
+	fn_ka10042(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10042(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+stk_cd	종목코드	String	Y	6	거래소별 종목코드
+(KRX:039490,NXT:039490_NX,SOR:039490_AL)
+strt_dt	시작일자	String	N	8	YYYYMMDD
+end_dt	종료일자	String	N	8	YYYYMMDD
+qry_dt_tp	조회기간구분	String	Y	1	0:기간으로 조회, 1:시작일자, 종료일자로 조회
+pot_tp	시점구분	String	Y	1	0:당일, 1:전일
+dt	기간	String	N	4	5:5일, 10:10일, 20:20일, 40:40일, 60:60일, 120:120일
+sort_base	정렬기준	String	Y	1	1:종가순, 2:날짜순
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+netprps_trde_ori_rank	순매수거래원순위	LIST	N		
+- rank	순위	String	N	20	
+- mmcm_cd	회원사코드	String	N	20	
+- mmcm_nm	회원사명	String	N	20	
+
+당일상위이탈원요청
+ka10053
+
+import requests
+import json
+
+# 당일상위이탈원요청
+def fn_ka10053(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10053', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'stk_cd': '005930', # 종목코드 거래소별 종목코드 (KRX:039490,NXT:039490_NX,SOR:039490_AL)
+	}
+
+	# 3. API 실행
+	fn_ka10053(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10053(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+stk_cd	종목코드	String	Y	6	거래소별 종목코드
+(KRX:039490,NXT:039490_NX,SOR:039490_AL)
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+tdy_upper_scesn_ori	당일상위이탈원	LIST	N		
+- sel_scesn_tm	매도이탈시간	String	N	20	
+- sell_qty	매도수량	String	N	20	
+- sel_upper_scesn_ori	매도상위이탈원	String	N	20	
+- buy_scesn_tm	매수이탈시간	String	N	20	
+- buy_qty	매수수량	String	N	20	
+- buy_upper_scesn_ori	매수상위이탈원	String	N	20	
+- qry_dt	조회일자	String	N	20	
+- qry_tm	조회시간	String	N	20	
+
+동일순매매순위요청
+ka10062
+
+import requests
+import json
+
+# 동일순매매순위요청
+def fn_ka10062(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10062', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'strt_dt': '20241106', # 시작일자 YYYYMMDD
+		'end_dt': '20241107', # 종료일자 YYYYMMDD
+		'mrkt_tp': '000', # 시장구분 000:전체, 001: 코스피, 101:코스닥
+		'trde_tp': '1', # 매매구분 1:순매수, 2:순매도
+		'sort_cnd': '1', # 정렬조건 1:수량, 2:금액
+		'unit_tp': '1', # 단위구분 1:단주, 1000:천주
+		'stex_tp': '3', # 거래소구분 1:KRX, 2:NXT 3.통합
+	}
+
+	# 3. API 실행
+	fn_ka10062(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10062(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+strt_dt	시작일자	String	Y	8	YYYYMMDD
+end_dt	종료일자	String	N	8	YYYYMMDD
+mrkt_tp	시장구분	String	Y	3	000:전체, 001: 코스피, 101:코스닥
+trde_tp	매매구분	String	Y	1	1:순매수, 2:순매도
+sort_cnd	정렬조건	String	Y	1	1:수량, 2:금액
+unit_tp	단위구분	String	Y	1	1:단주, 1000:천주
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT 3.통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+eql_nettrde_rank	동일순매매순위	LIST	N		
+- stk_cd	종목코드	String	N	20	
+- rank	순위	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pre_sig	대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- flu_rt	등락율	String	N	20	
+- acc_trde_qty	누적거래량	String	N	20	
+- orgn_nettrde_qty	기관순매매수량	String	N	20	
+- orgn_nettrde_amt	기관순매매금액	String	N	20	
+- orgn_nettrde_avg_pric	기관순매매평균가	String	N	20	
+- for_nettrde_qty	외인순매매수량	String	N	20	
+- for_nettrde_amt	외인순매매금액	String	N	20	
+- for_nettrde_avg_pric	외인순매매평균가	String	N	20	
+- nettrde_qty	순매매수량	String	N	20	
+- nettrde_amt	순매매금액	String	N	20	
+
+
+장중투자자별매매상위요청
+ka10065
+
+import requests
+import json
+
+# 장중투자자별매매상위요청
+def fn_ka10065(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10065', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'trde_tp': '1', # 매매구분 1:순매수, 2:순매도
+		'mrkt_tp': '000', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'orgn_tp': '9000', # 기관구분 9000:외국인, 9100:외국계, 1000:금융투자, 3000:투신, 5000:기타금융, 4000:은행, 2000:보험, 6000:연기금, 7000:국가, 7100:기타법인, 9999:기관계
+	}
+
+	# 3. API 실행
+	fn_ka10065(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10065(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+trde_tp	매매구분	String	Y	1	1:순매수, 2:순매도
+mrkt_tp	시장구분	String	Y	3	000:전체, 001:코스피, 101:코스닥
+orgn_tp	기관구분	String	Y	4	9000:외국인, 9100:외국계, 1000:금융투자, 3000:투신, 5000:기타금융, 4000:은행, 2000:보험, 6000:연기금, 7000:국가, 7100:기타법인, 9999:기관계
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+opmr_invsr_trde_upper	장중투자자별매매상위	LIST	N		
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- sel_qty	매도량	String	N	20	
+- buy_qty	매수량	String	N	20	
+- netslmt	순매도	String	N	20	
+
+대차거래상위10종목요청
+ka10069
+
+import requests
+import json
+
+# 대차거래상위10종목요청
+def fn_ka10069(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10069', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'strt_dt': '20241110', # 시작일자 YYYYMMDD
+		'end_dt': '20241125', # 종료일자 YYYYMMDD
+		'mrkt_tp': '001', # 시장구분 001:코스피, 101:코스닥
+	}
+
+	# 3. API 실행
+	fn_ka10069(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10069(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+strt_dt	시작일자	String	Y	8	YYYYMMDD
+end_dt	종료일자	String	N	8	YYYYMMDD
+mrkt_tp	시장구분	String	Y	3	001:코스피, 101:코스닥
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+dbrt_trde_cntrcnt_sum	대차거래체결주수합	String	N		
+dbrt_trde_rpy_sum	대차거래상환주수합	String	N		
+rmnd_sum	잔고주수합	String	N		
+remn_amt_sum	잔고금액합	String	N		
+dbrt_trde_cntrcnt_rt	대차거래체결주수비율	String	N		
+dbrt_trde_rpy_rt	대차거래상환주수비율	String	N		
+rmnd_rt	잔고주수비율	String	N		
+remn_amt_rt	잔고금액비율	String	N		
+dbrt_trde_upper_10stk	대차거래상위10종목	LIST	N		
+- stk_nm	종목명	String	N	20	
+- stk_cd	종목코드	String	N	20	
+- dbrt_trde_cntrcnt	대차거래체결주수	String	N	20	
+- dbrt_trde_rpy	대차거래상환주수	String	N	20	
+- rmnd	잔고주수	String	N	20	
+- remn_amt	잔고금액	String	N	20	
+
+시간외단일가등락율순위요청
+ka10098
+
+import requests
+import json
+
+# 시간외단일가등락율순위요청
+def fn_ka10098(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka10098', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '000', # 시장구분 000:전체,001:코스피,101:코스닥
+		'sort_base': '5', # 정렬기준 1:상승률,2:상승폭,3:하락률,4:하락폭,5:보합
+		'stk_cnd': '0', # 종목조건 0:전체조회,1:관리종목제외,2:정리매매종목제외,3:우선주제외,4:관리종목우선주제외,5:증100제외,6:증100만보기,7:증40만보기,8:증30만보기,9:증20만보기,12:증50만보기,13:증60만보기,14:ETF제외,15:스팩제외,16:ETF+ETN제외,17:ETN제외
+		'trde_qty_cnd': '0', # 거래량조건 0:전체조회, 10:백주이상,50:5백주이상,100;천주이상, 500:5천주이상, 1000:만주이상, 5000:5만주이상, 10000:10만주이상
+		'crd_cnd': '0', # 신용조건 0:전체조회, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 9:신용융자전체
+		'trde_prica': '0', # 거래대금 0:전체조회, 5:5백만원이상,10:1천만원이상, 30:3천만원이상, 50:5천만원이상, 100:1억원이상, 300:3억원이상, 500:5억원이상, 1000:10억원이상, 3000:30억원이상, 5000:50억원이상, 10000:100억원이상
+	}
+
+	# 3. API 실행
+	fn_ka10098(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka10098(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	000:전체,001:코스피,101:코스닥
+sort_base	정렬기준	String	Y	1	1:상승률,2:상승폭,3:하락률,4:하락폭,5:보합
+stk_cnd	종목조건	String	Y	2	0:전체조회,1:관리종목제외,2:정리매매종목제외,3:우선주제외,4:관리종목우선주제외,5:증100제외,6:증100만보기,7:증40만보기,8:증30만보기,9:증20만보기,12:증50만보기,13:증60만보기,14:ETF제외,15:스팩제외,16:ETF+ETN제외,17:ETN제외
+trde_qty_cnd	거래량조건	String	Y	5	0:전체조회, 10:백주이상,50:5백주이상,100;천주이상, 500:5천주이상, 1000:만주이상, 5000:5만주이상, 10000:10만주이상
+crd_cnd	신용조건	String	Y	1	0:전체조회, 1:신용융자A군, 2:신용융자B군, 3:신용융자C군, 4:신용융자D군, 9:신용융자전체
+trde_prica	거래대금	String	Y	5	0:전체조회, 5:5백만원이상,10:1천만원이상, 30:3천만원이상, 50:5천만원이상, 100:1억원이상, 300:3억원이상, 500:5억원이상, 1000:10억원이상, 3000:30억원이상, 5000:50억원이상, 10000:100억원이상
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+ovt_sigpric_flu_rt_rank	시간외단일가등락율순위	LIST	N		
+- rank	순위	String	N	20	
+- stk_cd	종목코드	String	N	20	
+- stk_nm	종목명	String	N	20	
+- cur_prc	현재가	String	N	20	
+- pred_pre_sig	전일대비기호	String	N	20	
+- pred_pre	전일대비	String	N	20	
+- flu_rt	등락률	String	N	20	
+- sel_tot_req	매도총잔량	String	N	20	
+- buy_tot_req	매수총잔량	String	N	20	
+- acc_trde_qty	누적거래량	String	N	20	
+- acc_trde_prica	누적거래대금	String	N	20	
+- tdy_close_pric	당일종가	String	N	20	
+- tdy_close_pric_flu_rt	당일종가등락률	String	N	20	
+
+
+외국인기관매매상위요청
+ka90009
+
+import requests
+import json
+
+# 외국인기관매매상위요청
+def fn_ka90009(token, data, cont_yn='N', next_key=''):
+	# 1. 요청할 API URL
+	#host = 'https://mockapi.kiwoom.com' # 모의투자
+	host = 'https://api.kiwoom.com' # 실전투자
+	endpoint = '/api/dostk/rkinfo'
+	url =  host + endpoint
+
+	# 2. header 데이터
+	headers = {
+		'Content-Type': 'application/json;charset=UTF-8', # 컨텐츠타입
+		'authorization': f'Bearer {token}', # 접근토큰
+		'cont-yn': cont_yn, # 연속조회여부
+		'next-key': next_key, # 연속조회키
+		'api-id': 'ka90009', # TR명
+	}
+
+	# 3. http POST 요청
+	response = requests.post(url, headers=headers, json=data)
+
+	# 4. 응답 상태 코드와 데이터 출력
+	print('Code:', response.status_code)
+	print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+	print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))  # JSON 응답을 파싱하여 출력
+
+# 실행 구간
+if __name__ == '__main__':
+	# 1. 토큰 설정
+	MY_ACCESS_TOKEN = '사용자 AccessToken'# 접근토큰
+
+	# 2. 요청 데이터
+	params = {
+		'mrkt_tp': '000', # 시장구분 000:전체, 001:코스피, 101:코스닥
+		'amt_qty_tp': '1', # 금액수량구분 1:금액(천만), 2:수량(천)
+		'qry_dt_tp': '1', # 조회일자구분 0:조회일자 미포함, 1:조회일자 포함
+		'date': '20241101', # 날짜 YYYYMMDD
+		'stex_tp': '1', # 거래소구분 1:KRX, 2:NXT, 3:통합
+	}
+
+	# 3. API 실행
+	fn_ka90009(token=MY_ACCESS_TOKEN, data=params)
+
+	# next-key, cont-yn 값이 있을 경우
+	# fn_ka90009(token=MY_ACCESS_TOKEN, data=params, cont_yn='Y', next_key='nextkey..')
+
+요청
+Header
+Element	한글명	type	Required	Length	Description
+authorization	접근토큰	String	Y	1000	토큰 지정시 토큰타입("Bearer") 붙혀서 호출
+예) Bearer Egicyx...
+cont-yn	연속조회여부	String	N	1	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 cont-yn값 세팅
+next-key	연속조회키	String	N	50	응답 Header의 연속조회여부값이 Y일 경우 다음데이터 요청시 응답 Header의 next-key값 세팅
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+mrkt_tp	시장구분	String	Y	3	000:전체, 001:코스피, 101:코스닥
+amt_qty_tp	금액수량구분	String	Y	1	1:금액(천만), 2:수량(천)
+qry_dt_tp	조회일자구분	String	Y	1	0:조회일자 미포함, 1:조회일자 포함
+date	날짜	String	N	8	YYYYMMDD
+stex_tp	거래소구분	String	Y	1	1:KRX, 2:NXT, 3:통합
+응답
+Header
+Element	한글명	type	Required	Length	Description
+cont-yn	연속조회여부	String	N	1	다음 데이터가 있을시 Y값 전달
+next-key	연속조회키	String	N	50	다음 데이터가 있을시 다음 키값 전달
+api-id	TR명	String	Y	10	
+Body
+Element	한글명	type	Required	Length	Description
+frgnr_orgn_trde_upper	외국인기관매매상위	LIST	N		
+- for_netslmt_stk_cd	외인순매도종목코드	String	N	20	
+- for_netslmt_stk_nm	외인순매도종목명	String	N	20	
+- for_netslmt_amt	외인순매도금액	String	N	20	
+- for_netslmt_qty	외인순매도수량	String	N	20	
+- for_netprps_stk_cd	외인순매수종목코드	String	N	20	
+- for_netprps_stk_nm	외인순매수종목명	String	N	20	
+- for_netprps_amt	외인순매수금액	String	N	20	
+- for_netprps_qty	외인순매수수량	String	N	20	
+- orgn_netslmt_stk_cd	기관순매도종목코드	String	N	20	
+- orgn_netslmt_stk_nm	기관순매도종목명	String	N	20	
+- orgn_netslmt_amt	기관순매도금액	String	N	20	
+- orgn_netslmt_qty	기관순매도수량	String	N	20	
+- orgn_netprps_stk_cd	기관순매수종목코드	String	N	20	
+- orgn_netprps_stk_nm	기관순매수종목명	String	N	20	
+- orgn_netprps_amt	기관순매수금액	String	N	20	
+- orgn_netprps_qty	기관순매수수량	String	N	20	
