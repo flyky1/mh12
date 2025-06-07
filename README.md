@@ -36,6 +36,9 @@ export kiwoom_appkey=발급받은_앱키
 export kiwoom_secretkey=발급받은_비밀키
 ```
 
+모의투자 환경을 사용하려면 `KiwoomClient` 생성 시 `is_mock=True` 옵션을 지정합니다.
+또한 보유종목 조회 예제를 실행하려면 계좌번호(`kiwoom_cano`)와 계좌상품코드(`kiwoom_acnt_prdt_cd`)도 환경 변수로 설정해야 합니다.
+
 ### 인증 및 시세 조회 예제
 
 ```python
