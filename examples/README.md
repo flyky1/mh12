@@ -14,6 +14,7 @@
    - 거래정지종목, 관리종목 조회
    - 종목 검색 및 재무정보 조회
    - 투자자 동향 조회
+3. **holdings_example.py**: 모의투자 계좌의 보유종목을 조회하는 예제
 
 ## 사용 방법
 
@@ -26,6 +27,8 @@
    # macOS/Linux
    export kiwoom_appkey=발급받은_앱키
    export kiwoom_secretkey=발급받은_비밀키
+   export kiwoom_cano=계좌번호8자리
+   export kiwoom_acnt_prdt_cd=계좌상품코드2자리
    ```
 
 2. 필요 패키지 설치
@@ -40,6 +43,9 @@
    
    # 종목 정보 조회 예제
    python stock_info_example.py
+
+   # 보유종목 조회 예제
+   python holdings_example.py
    ```
 
 ## 주의사항
